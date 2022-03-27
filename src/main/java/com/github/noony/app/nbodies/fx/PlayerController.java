@@ -73,19 +73,19 @@ public class PlayerController implements Initializable {
     private void updateState() {
         if (globalClock != null) {
             switch (globalClock.getState()) {
-                case PAUSED:
+                case PAUSED -> {
                     playTB.setDisable(false);
                     playTB.setSelected(false);
                     pauseTB.setDisable(true);
                     pauseTB.setSelected(true);
-                    break;
-                case PLAYING:
+                }
+                case PLAYING -> {
                     playTB.setDisable(true);
                     playTB.setSelected(true);
                     pauseTB.setDisable(false);
                     pauseTB.setSelected(false);
-                    break;
-                default:
+                }
+                default ->
                     throw new UnsupportedOperationException();
             }
         } else {

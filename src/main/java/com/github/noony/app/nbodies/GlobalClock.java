@@ -40,7 +40,7 @@ public class GlobalClock {
     private final PropertyChangeSupport propertyChangeSupport;
     private final Timeline timeline;
 
-    private int period = 20;
+    private final int period = 20;
 
     private long currentTime = 0;
 
@@ -61,30 +61,30 @@ public class GlobalClock {
 
     public void play() {
         switch (state) {
-            case PAUSED:
+            case PAUSED -> {
                 state = ExecutionState.PLAYING;
                 timeline.play();
                 propertyChangeSupport.firePropertyChange(CLOCK_STATE_CHANGED, ExecutionState.PAUSED, state);
-                break;
-            case PLAYING:
+            }
+            case PLAYING -> {
                 // nothing to do
-                break;
-            default:
+            }
+            default ->
                 throw new UnsupportedOperationException();
         }
     }
 
     public void pause() {
         switch (state) {
-            case PAUSED:
+            case PAUSED -> {
                 // nothing to do
-                break;
-            case PLAYING:
+            }
+            case PLAYING -> {
                 state = ExecutionState.PAUSED;
                 timeline.pause();
                 propertyChangeSupport.firePropertyChange(CLOCK_STATE_CHANGED, ExecutionState.PLAYING, state);
-                break;
-            default:
+            }
+            default ->
                 throw new UnsupportedOperationException();
         }
     }

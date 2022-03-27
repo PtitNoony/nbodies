@@ -30,8 +30,6 @@ public class Body {
 
     private static final int SCALE = 150;
 
-    private static final double GRAVITY = 1.0 / 5000;
-
     private final List<Body> otherBodies;
 
     private final String name;
@@ -49,7 +47,7 @@ public class Body {
     public Body(String name, double mass, double radius, double sunDistance, double speed, Color color) {
         otherBodies = new LinkedList<>();
         this.name = name;
-        this.mass = BigDecimal.valueOf(mass).multiply(Constants.EARTH_MASS);// * Constants.EARTH_MASS.doubleValue();
+        this.mass = BigDecimal.valueOf(mass).multiply(Constants.EARTH_MASS);// TODO remove
         this.radius = radius;
         this.color = color;
         currentPosition = new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(sunDistance)), BigDecimal.ZERO);
@@ -81,26 +79,9 @@ public class Body {
 
     protected void calculateNextPosition(double deltaT) {
         BigPoint2D totalForce = new BigPoint2D();
-//        otherBodies.forEach(b -> totalForce.add(calculateForce(b)));
-        double fx = 0.0;
-        double fy = 0.0;
-        for (Body b : otherBodies) {
-            BigPoint2D f = calculateForce(b);
+        otherBodies.stream().map(b -> calculateForce(b)).forEachOrdered(f -> {
             totalForce.add(f);
-        }
-//        System.err.println(" > " + name + "Force" + fx + "," + fy + "," + fz);
-//        double ax = fx / mass;
-//        double ay = fy / mass;
-//        //
-//        double nextVx = ax * deltaT + currentSpeed.getX();
-//        double nextVy = ay * deltaT + currentSpeed.getY();
-//        double nextVz = az * deltaT + currentSpeed.getZ();
-//        //
-//        nextSpeed = new Point3D(nextVx, nextVy, nextVz);
-//        //
-//        double nextX = 0.5 * ax * deltaT * deltaT + currentSpeed.getX() * deltaT + currentPosition.getX();
-//        double nextY = 0.5 * ay * deltaT * deltaT + currentSpeed.getY() * deltaT + currentPosition.getY();
-//        double nextZ = 0.5 * az * deltaT * deltaT + currentSpeed.getZ() * deltaT + currentPosition.getZ();
+        });
         //
         BigDecimal aX = totalForce.getX().divide(mass, SCALE, RoundingMode.HALF_UP);
         BigDecimal aY = totalForce.getY().divide(mass, SCALE, RoundingMode.HALF_UP);
@@ -128,32 +109,13 @@ public class Body {
     }
 
     private BigPoint2D calculateForce(Body b) {
-//        System.err.println("Calculating force " + b + " <-> " + name);
         // TODO with large values
         BigDecimal distance = currentPosition.distance(b.getCurrentPosition());
-//        System.err.println(" > " + name + " dist:" + distance);
-//        Point3D direction = new Point3D(
-//                b.getCurrentPosition().getX() - currentPosition.getX(),
-//                b.getCurrentPosition().getY() - currentPosition.getY(),
-//                b.getCurrentPosition().getZ() - currentPosition.getZ());
         BigPoint2D direction = new BigPoint2D(
                 b.currentPosition.getX().subtract(currentPosition.getX()),
                 b.currentPosition.getY().subtract(currentPosition.getY()));
         BigPoint2D nDirection = direction.normalize();
-//        System.err.println(" > " + name + " dir:" + nDirection);
-//        BigDecimal numerator = Constants.GRAVITY.multiply(mass).multiply(b.mass);
-//        BigDecimal denominator = BigDecimal.valueOf(distance).pow(2);
-//        System.err.println(" > " + name + " G       :" + Constants.GRAVITY);
-//        System.err.println(" > " + name + " mass    :" + mass);
-//        System.err.println(" > " + name + " b mass  :" + b.mass);
-//        System.err.println(" > " + name + " numerator  :" + numerator);
-//        System.err.println(" > " + name + " denominator:" + denominator);
         BigDecimal fNorm = Constants.GRAVITY.multiply(mass).multiply(b.mass).divide(distance.pow(2), SCALE, RoundingMode.HALF_UP);
-
-//BigDecimal fN
-//        double forceNorm = GRAVITY * b.mass * mass / (distance * distance);
-//        Point3D force = new Point3D(forceNorm * nDirection.getX(), forceNorm * nDirection.getY(), forceNorm * nDirection.getZ());
-//        System.err.println(" > " + name + " from " + b.name + ":" + force);
         BigPoint2D force = new BigPoint2D(fNorm.multiply(nDirection.getX()), fNorm.multiply(nDirection.getY()));
         return force;
     }

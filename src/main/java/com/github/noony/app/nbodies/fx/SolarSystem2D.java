@@ -99,14 +99,11 @@ public class SolarSystem2D {
 
     private void handleSolarSystemChange(PropertyChangeEvent event) {
         switch (event.getPropertyName()) {
-            case SolarSystem.BODY_ADDED:
+            case SolarSystem.BODY_ADDED ->
                 createNewBody2D((Body) event.getNewValue());
-                break;
-            case SolarSystem.TIME_CHANGED:
-//                System.err.println("Time changed");
+            case SolarSystem.TIME_CHANGED ->
                 updateBodiesPosition();
-                break;
-            default:
+            default ->
                 throw new UnsupportedOperationException(event.getPropertyName());
         }
     }
