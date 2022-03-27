@@ -18,6 +18,7 @@ package com.github.noony.app.nbodies;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import java.util.List;
  */
 public class SolarSystem {
 
+    public static final int DEFAULT_TIME_INCREMENT = 1000;
+
     public static final String BODY_ADDED = "bodyAdded";
     public static final String TIME_CHANGED = "timeChanged";
 
@@ -34,18 +37,33 @@ public class SolarSystem {
     private final String name;
     private final PropertyChangeSupport propertyChangeSupport;
 
-    public SolarSystem(String name) {
-        this.name = name;
+    private final int timeIncrement;
+
+    public SolarSystem(String aName, int aTimeIncrement) {
+        name = aName;
         bodies = new LinkedList<>();
+        timeIncrement = aTimeIncrement;
         propertyChangeSupport = new PropertyChangeSupport(SolarSystem.this);
+    }
+
+    public SolarSystem(String aName) {
+        this(aName, DEFAULT_TIME_INCREMENT);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
     public String getName() {
         return name;
+    }
+
+    public List<Body> getBodies() {
+        return Collections.unmodifiableList(bodies);
     }
 
     public void addBody(Body body) {
@@ -53,7 +71,6 @@ public class SolarSystem {
             b.addOtherBody(body);
             body.addOtherBody(b);
         });
-
         bodies.add(body);
         propertyChangeSupport.firePropertyChange(BODY_ADDED, null, body);
     }
@@ -65,7 +82,7 @@ public class SolarSystem {
 
     private void processNextStep() {
         // parallel stream?
-        bodies.forEach(body -> body.calculateNextPosition(1000));// 86400
+        bodies.forEach(body -> body.calculateNextPosition(timeIncrement));// 86400
         bodies.forEach(Body::moveToNextPosition);
         propertyChangeSupport.firePropertyChange(TIME_CHANGED, null, null);
     }

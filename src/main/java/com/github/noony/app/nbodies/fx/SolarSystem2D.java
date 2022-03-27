@@ -47,6 +47,8 @@ public class SolarSystem2D {
 
     private double centerX = width / 2.0;
     private double centerY = height / 2.0;
+
+    private SolarSystem solarSystem = null;
     // scale factor
 
     public SolarSystem2D() {
@@ -92,15 +94,20 @@ public class SolarSystem2D {
         systemGroup.setTranslateY(centerY);
     }
 
-    public void setSolarSystem(SolarSystem solarSystem) {
-        // TODO clear all
+    public void setSolarSystem(SolarSystem aSolarSystem) {
+        if (solarSystem != null) {
+            solarSystem.removePropertyChangeListener(this::handleSolarSystemChange);
+        }
+        bodies.clear();
+        solarSystem = aSolarSystem;
+        solarSystem.getBodies().forEach(this::createBody2D);
         solarSystem.addPropertyChangeListener(this::handleSolarSystemChange);
     }
 
     private void handleSolarSystemChange(PropertyChangeEvent event) {
         switch (event.getPropertyName()) {
             case SolarSystem.BODY_ADDED ->
-                createNewBody2D((Body) event.getNewValue());
+                createBody2D((Body) event.getNewValue());
             case SolarSystem.TIME_CHANGED ->
                 updateBodiesPosition();
             default ->
@@ -108,7 +115,7 @@ public class SolarSystem2D {
         }
     }
 
-    private void createNewBody2D(Body body) {
+    private void createBody2D(Body body) {
         Body2D body2D = new Body2D(body);
         bodies.add(body2D);
         runLater(() -> systemGroup.getChildren().add(body2D.getNode()));

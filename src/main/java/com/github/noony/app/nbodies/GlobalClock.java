@@ -30,6 +30,8 @@ import javafx.util.Duration;
  */
 public class GlobalClock {
 
+    public static final int DEFAULT_PERIOD = 20;
+
     public static final String CLOCK_STATE_CHANGED = "clockStateChanged";
     public static final String CLOCK_TIME_CHANGED = "clockTimeChanged";
 
@@ -40,13 +42,14 @@ public class GlobalClock {
     private final PropertyChangeSupport propertyChangeSupport;
     private final Timeline timeline;
 
-    private final int period = 20;
+    private int period = 20;
 
     private long currentTime = 0;
 
     private ExecutionState state = ExecutionState.PAUSED;
 
-    public GlobalClock() {
+    public GlobalClock(int aPeriod) {
+        period = aPeriod;
         propertyChangeSupport = new PropertyChangeSupport(GlobalClock.this);
         timeline = new Timeline(new KeyFrame(
                 Duration.millis(period),
@@ -55,8 +58,17 @@ public class GlobalClock {
         state = ExecutionState.PAUSED;
     }
 
+    public GlobalClock() {
+        this(DEFAULT_PERIOD);
+    }
+
     public long getCurrentTime() {
         return currentTime;
+    }
+
+    public void setDuration(int aDuration) {
+        period = aDuration;
+        timeline.setDelay(Duration.millis(period));
     }
 
     public void play() {
