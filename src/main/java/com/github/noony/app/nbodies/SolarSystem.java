@@ -66,6 +66,10 @@ public class SolarSystem {
         return Collections.unmodifiableList(bodies);
     }
 
+    public int getTimeIncrement() {
+        return timeIncrement;
+    }
+
     public void addBody(Body body) {
         bodies.forEach(b -> {
             b.addOtherBody(body);

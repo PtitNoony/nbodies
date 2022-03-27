@@ -16,6 +16,7 @@
  */
 package com.github.noony.app.nbodies;
 
+import java.math.BigDecimal;
 import javafx.scene.paint.Color;
 
 /**
@@ -27,11 +28,41 @@ public class Examples {
     public static SolarSystem createOurSolarSystem() {
         var solarSystem = new SolarSystem("My Testing Solar System");
         //
-        Body sun = new Body("Sun", 333000, 2, 0, 0, Color.GOLD);
-        Body mercure = new Body("Mercure", 0.055, 0.38295, 0.4, 47362, Color.GOLDENROD);
-        Body venus = new Body("Venus", 0.815, 0.9499, 0.7, 35020, Color.ANTIQUEWHITE);
-        Body earth = new Body("Earth", 1, 1, 1.1, 29782, Color.DEEPSKYBLUE);
-        Body mars = new Body("Mars", 0.107, 0.533, 1.5, 24077, Color.ORANGERED);
+        Body sun = new Body("Sun",
+                BigDecimal.valueOf(333000).multiply(Constants.EARTH_MASS),
+                BigDecimal.valueOf(2),
+                new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0)), BigDecimal.ZERO),
+                new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(0)),
+                Color.GOLD);
+        //
+        Body mercure = new Body("Mercure",
+                BigDecimal.valueOf(0.055).multiply(Constants.EARTH_MASS),
+                BigDecimal.valueOf(0.38295),
+                new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0.4)), BigDecimal.ZERO),
+                new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(47362)),
+                Color.GOLDENROD);
+        //
+        Body venus = new Body("Venus",
+                BigDecimal.valueOf(0.815).multiply(Constants.EARTH_MASS),
+                BigDecimal.valueOf(0.9499),
+                new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0.7)), BigDecimal.ZERO),
+                new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(35020)),
+                Color.ANTIQUEWHITE);
+        //
+        Body earth = new Body("Earth",
+                BigDecimal.valueOf(1).multiply(Constants.EARTH_MASS),
+                BigDecimal.valueOf(1),
+                new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(1.1)), BigDecimal.ZERO),
+                new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(29782)),
+                Color.DEEPSKYBLUE);
+        //
+        Body mars = new Body("Mars",
+                BigDecimal.valueOf(0.107).multiply(Constants.EARTH_MASS),
+                BigDecimal.valueOf(0.533),
+                new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(1.5)), BigDecimal.ZERO),
+                new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(24077)),
+                Color.ORANGERED);
+        //
         solarSystem.addBody(sun);
         solarSystem.addBody(mercure);
         solarSystem.addBody(venus);

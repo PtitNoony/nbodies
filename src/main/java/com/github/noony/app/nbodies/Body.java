@@ -36,7 +36,7 @@ public class Body {
 
     private final String name;
     private final BigDecimal mass;
-    private final double radius;
+    private final BigDecimal radius;
     //
     private final Color color;
     //
@@ -49,16 +49,16 @@ public class Body {
     private BigDecimal deltaT;
     private BigDecimal deltaTSquare;
 
-    public Body(String name, double mass, double radius, double sunDistance, double speed, Color color) {
+    public Body(String aName, BigDecimal aMass, BigDecimal aRadius, BigPoint2D initialPosition, BigPoint2D initialSpeed, Color aColor) {
         deltaT = BigDecimal.valueOf(DEFAULT_TIME_STEP);
         deltaTSquare = deltaT.pow(2);
         otherBodies = new LinkedList<>();
-        this.name = name;
-        this.mass = BigDecimal.valueOf(mass).multiply(Constants.EARTH_MASS);// TODO remove
-        this.radius = radius;
-        this.color = color;
-        currentPosition = new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(sunDistance)), BigDecimal.ZERO);
-        currentSpeed = new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(speed));
+        name = aName;
+        mass = aMass;
+        radius = aRadius;
+        color = aColor;
+        currentPosition = initialPosition;
+        currentSpeed = initialSpeed;
         //
         nextPosition = currentPosition;
         nextSpeed = currentSpeed;
@@ -73,7 +73,7 @@ public class Body {
     }
 
     public double getRadius() {
-        return radius;
+        return radius.doubleValue();
     }
 
     public BigPoint2D getCurrentSpeed() {
@@ -121,7 +121,6 @@ public class Body {
     }
 
     private BigPoint2D calculateForce(Body b) {
-        // TODO with large values
         BigDecimal distance = currentPosition.distance(b.getCurrentPosition());
         BigPoint2D nDirection = new BigPoint2D(
                 b.currentPosition.getX().subtract(currentPosition.getX()),
