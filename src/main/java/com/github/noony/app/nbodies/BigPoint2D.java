@@ -57,13 +57,9 @@ public class BigPoint2D {
     }
 
     public BigDecimal distance(BigPoint2D bigPoint2D) {
-        // not optimized
-        BigDecimal deltaX = bigPoint2D.getX().subtract(x, m);
-        BigDecimal deltaXSquare = deltaX.multiply(deltaX, m);
-        BigDecimal deltaY = bigPoint2D.getY().subtract(y, m);
-        BigDecimal deltaYSquare = deltaY.multiply(deltaY);
-        BigDecimal sum = deltaXSquare.add(deltaYSquare);
-        return new BigDecimal(BigIntegerMath.sqrt(sum.toBigInteger(), RoundingMode.DOWN));
+        BigDecimal deltaXSquare = bigPoint2D.getX().subtract(x, m).pow(2);
+        BigDecimal deltaYSquare = bigPoint2D.getY().subtract(y, m).pow(2);
+        return new BigDecimal(BigIntegerMath.sqrt(deltaXSquare.add(deltaYSquare).toBigInteger(), RoundingMode.DOWN));
     }
 
     public BigPoint2D normalize() {
