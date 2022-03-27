@@ -72,6 +72,7 @@ public class SolarSystem {
             body.addOtherBody(b);
         });
         bodies.add(body);
+        body.setDeltaT(timeIncrement);
         propertyChangeSupport.firePropertyChange(BODY_ADDED, null, body);
     }
 
@@ -82,7 +83,7 @@ public class SolarSystem {
 
     private void processNextStep() {
         // parallel stream?
-        bodies.forEach(body -> body.calculateNextPosition(timeIncrement));// 86400
+        bodies.forEach(body -> body.calculateNextPosition());// 86400
         bodies.forEach(Body::moveToNextPosition);
         propertyChangeSupport.firePropertyChange(TIME_CHANGED, null, null);
     }

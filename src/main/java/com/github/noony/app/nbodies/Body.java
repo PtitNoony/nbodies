@@ -28,7 +28,9 @@ import javafx.scene.paint.Color;
  */
 public class Body {
 
-    private static final int SCALE = 150;
+    public static final double DEFAULT_TIME_STEP = SolarSystem.DEFAULT_TIME_INCREMENT;
+
+    private static final int SCALE = 15;
 
     private final List<Body> otherBodies;
 
@@ -43,8 +45,13 @@ public class Body {
     //
     private BigPoint2D nextPosition;
     private BigPoint2D nextSpeed;
+    //
+    private BigDecimal deltaT;
+    private BigDecimal deltaTSquare;
 
     public Body(String name, double mass, double radius, double sunDistance, double speed, Color color) {
+        deltaT = BigDecimal.valueOf(DEFAULT_TIME_STEP);
+        deltaTSquare = deltaT.pow(2);
         otherBodies = new LinkedList<>();
         this.name = name;
         this.mass = BigDecimal.valueOf(mass).multiply(Constants.EARTH_MASS);// TODO remove
@@ -77,7 +84,7 @@ public class Body {
         return name;
     }
 
-    protected void calculateNextPosition(double deltaT) {
+    protected void calculateNextPosition() {
         BigPoint2D totalForce = new BigPoint2D();
         otherBodies.stream().map(b -> calculateForce(b)).forEachOrdered(f -> {
             totalForce.add(f);
@@ -86,15 +93,20 @@ public class Body {
         BigDecimal aX = totalForce.getX().divide(mass, SCALE, RoundingMode.HALF_UP);
         BigDecimal aY = totalForce.getY().divide(mass, SCALE, RoundingMode.HALF_UP);
         //
-        BigDecimal vX = (aX.multiply(BigDecimal.valueOf(deltaT))).add(currentSpeed.getX());
-        BigDecimal vY = (aY.multiply(BigDecimal.valueOf(deltaT))).add(currentSpeed.getY());
+        BigDecimal vX = (aX.multiply(deltaT)).add(currentSpeed.getX());
+        BigDecimal vY = (aY.multiply(deltaT)).add(currentSpeed.getY());
         //
         nextSpeed = new BigPoint2D(vX, vY);
         //
-        BigDecimal x = ((aX.multiply(BigDecimal.valueOf(deltaT).multiply(BigDecimal.valueOf(deltaT))).multiply(BigDecimal.valueOf(0.5))).add(currentSpeed.getX().multiply(BigDecimal.valueOf(deltaT)))).add(currentPosition.getX());
-        BigDecimal y = ((aY.multiply(BigDecimal.valueOf(deltaT).multiply(BigDecimal.valueOf(deltaT))).multiply(BigDecimal.valueOf(0.5))).add(currentSpeed.getY().multiply(BigDecimal.valueOf(deltaT)))).add(currentPosition.getY());
+        BigDecimal x = ((aX.multiply(deltaTSquare).multiply(BigDecimal.valueOf(0.5))).add(currentSpeed.getX().multiply(deltaT))).add(currentPosition.getX());
+        BigDecimal y = ((aY.multiply(deltaTSquare).multiply(BigDecimal.valueOf(0.5))).add(currentSpeed.getY().multiply(deltaT))).add(currentPosition.getY());
         //
         nextPosition = new BigPoint2D(x, y);
+    }
+
+    protected void setDeltaT(double aDeltaT) {
+        deltaT = BigDecimal.valueOf(aDeltaT);
+        deltaTSquare = deltaT.pow(2);
     }
 
     protected void moveToNextPosition() {
@@ -111,10 +123,10 @@ public class Body {
     private BigPoint2D calculateForce(Body b) {
         // TODO with large values
         BigDecimal distance = currentPosition.distance(b.getCurrentPosition());
-        BigPoint2D direction = new BigPoint2D(
+        BigPoint2D nDirection = new BigPoint2D(
                 b.currentPosition.getX().subtract(currentPosition.getX()),
-                b.currentPosition.getY().subtract(currentPosition.getY()));
-        BigPoint2D nDirection = direction.normalize();
+                b.currentPosition.getY().subtract(currentPosition.getY()))
+                .normalize();
         BigDecimal fNorm = Constants.GRAVITY.multiply(mass).multiply(b.mass).divide(distance.pow(2), SCALE, RoundingMode.HALF_UP);
         BigPoint2D force = new BigPoint2D(fNorm.multiply(nDirection.getX()), fNorm.multiply(nDirection.getY()));
         return force;
