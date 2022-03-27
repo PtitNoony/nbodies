@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.noony.app.nbodies.fx.PlayerController">
+   <children>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ToggleButton fx:id="playTB" mnemonicParsing="false" onAction="#onPlayAction" text="Play" />
+            <ToggleButton fx:id="pauseTB" mnemonicParsing="false" onAction="#onPauseAction" text="Pause" />
+         </children>
+         <padding>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </padding>
+      </HBox>
+   </children>
+</AnchorPane>
