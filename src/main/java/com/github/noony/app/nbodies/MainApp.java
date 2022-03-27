@@ -19,6 +19,10 @@ package com.github.noony.app.nbodies;
 import com.github.noony.app.nbodies.fx.ControlLayer;
 import com.github.noony.app.nbodies.fx.ExecutionController;
 import com.github.noony.app.nbodies.fx.SolarSystem2D;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +35,18 @@ public class MainApp extends Application {
 
     public static final double DEFAULT_WIDTH = 1600;
     public static final double DEFAULT_HEIGHT = 900;
+
+    private static final Logger LOG = Logger.getGlobal();
+
+    static {
+        var stream = MainApp.class.getClassLoader().getResourceAsStream("logging.properties");
+        try {
+            LogManager.getLogManager().readConfiguration(stream);
+            LOG.setLevel(Level.FINEST);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "Could not load loader properties :: {0}", e.getCause());
+        }
+    }
 
     private double width = DEFAULT_WIDTH;
     private double height = DEFAULT_HEIGHT;
