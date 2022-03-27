@@ -53,6 +53,7 @@ public class ExecutionController extends GraphicalController {
             setContent(loader.load());
             controller = loader.getController();
             controller.setClock(globalClock);
+
         } catch (IOException ex) {
             Logger.getLogger(ExecutionController.class.getName()).log(Level.SEVERE, "Error while loading Player.fxml:: {0}", ex);
         }

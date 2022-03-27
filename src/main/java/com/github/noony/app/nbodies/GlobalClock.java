@@ -35,14 +35,10 @@ public class GlobalClock {
     public static final String CLOCK_STATE_CHANGED = "clockStateChanged";
     public static final String CLOCK_TIME_CHANGED = "clockTimeChanged";
 
-    public enum ExecutionState {
-        PAUSED, PLAYING
-    }
-
     private final PropertyChangeSupport propertyChangeSupport;
     private final Timeline timeline;
 
-    private int period = 20;
+    private int period;
 
     private long currentTime = 0;
 

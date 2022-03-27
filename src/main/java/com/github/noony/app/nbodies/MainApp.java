@@ -94,6 +94,9 @@ public class MainApp extends Application {
         stage.setTitle("Simple solar system creator");
         stage.setScene(scene);
         stage.show();
+
+        CalculationRunner calculationRunner = new CalculationRunner(solarSystem, 500);
+//        calculationRunner.start();
     }
 
     private void updateSize() {
