@@ -16,7 +16,7 @@
  */
 package com.github.noony.app.nbodies.fx;
 
-import com.github.noony.app.nbodies.GlobalClock;
+import com.github.noony.app.nbodies.CalculationRunner;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -37,7 +37,7 @@ public class PlayerController implements Initializable {
     @FXML
     private ToggleButton pauseTB;
 
-    private GlobalClock globalClock;
+    private CalculationRunner calculationRunner;
 
     /**
      * Initializes the controller class.
@@ -52,27 +52,27 @@ public class PlayerController implements Initializable {
 
     @FXML
     protected void onPauseAction(ActionEvent event) {
-        if (globalClock != null) {
-            globalClock.pause();
+        if (calculationRunner != null) {
+            calculationRunner.pause();
         }
     }
 
     @FXML
     protected void onPlayAction(ActionEvent event) {
-        if (globalClock != null) {
-            globalClock.play();
+        if (calculationRunner != null) {
+            calculationRunner.play();
         }
     }
 
-    protected void setClock(GlobalClock clock) {
-        globalClock = clock;
+    protected void setCalculationRunner(CalculationRunner aCalculationRunner) {
+        calculationRunner = aCalculationRunner;
         updateState();
-        globalClock.addPropertyChangeListener(event -> updateState());
+        calculationRunner.addPropertyChangeListener(event -> updateState());
     }
 
     private void updateState() {
-        if (globalClock != null) {
-            switch (globalClock.getState()) {
+        if (calculationRunner != null) {
+            switch (calculationRunner.getExecutionState()) {
                 case PAUSED -> {
                     playTB.setDisable(false);
                     playTB.setSelected(false);

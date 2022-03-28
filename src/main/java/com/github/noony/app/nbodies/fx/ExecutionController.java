@@ -16,7 +16,7 @@
  */
 package com.github.noony.app.nbodies.fx;
 
-import com.github.noony.app.nbodies.GlobalClock;
+import com.github.noony.app.nbodies.CalculationRunner;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,13 +30,13 @@ import javafx.scene.shape.Circle;
  */
 public class ExecutionController extends GraphicalController {
 
-    private final GlobalClock globalClock;
+    private final CalculationRunner calculationRunner;
 
     private PlayerController controller;
 
-    public ExecutionController(GlobalClock clock) {
+    public ExecutionController(CalculationRunner aCalculationRunner) {
         super();
-        globalClock = clock;
+        calculationRunner = aCalculationRunner;
         createHandle();
         createContent();
     }
@@ -52,8 +52,7 @@ public class ExecutionController extends GraphicalController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Player.fxml"));
             setContent(loader.load());
             controller = loader.getController();
-            controller.setClock(globalClock);
-
+            controller.setCalculationRunner(calculationRunner);
         } catch (IOException ex) {
             Logger.getLogger(ExecutionController.class.getName()).log(Level.SEVERE, "Error while loading Player.fxml:: {0}", ex);
         }

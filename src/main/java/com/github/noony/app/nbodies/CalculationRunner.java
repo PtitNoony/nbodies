@@ -16,8 +16,12 @@
  */
 package com.github.noony.app.nbodies;
 
+import static com.github.noony.app.nbodies.GlobalClock.CLOCK_STATE_CHANGED;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.Synchronized;
 
 /**
  *
@@ -25,27 +29,96 @@ import java.util.logging.Logger;
  */
 public class CalculationRunner extends Thread {
 
+    public static final String CLOCK_TIME_CHANGED = "clockTimeChanged";
+
+    private final PropertyChangeSupport propertyChangeSupport;
     private final SolarSystem solarSystem;
     private final int asleepTime;
+
+    private boolean running = false;
 
     private ExecutionState state = ExecutionState.PAUSED;
 
     public CalculationRunner(SolarSystem aSolarSystem, int anAsleepTime) {
         super(aSolarSystem.getName() + "__Runner");
+        propertyChangeSupport = new PropertyChangeSupport(CalculationRunner.this);
         solarSystem = aSolarSystem;
+        solarSystem.attachCalculationRunner(CalculationRunner.this);
         asleepTime = anAsleepTime;
     }
 
     @Override
     public void run() {
-        while (true) {
-            incrementSystemTime();
-            try {
-                Thread.sleep(asleepTime);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(CalculationRunner.class.getName()).log(Level.SEVERE, null, ex);
+        running = true;
+        while (running) {
+            switch (state) {
+                case DONE ->
+                    running = false;
+                case PAUSED -> {
+                    performInPause();
+                }
+                case PLAYING -> {
+                    performPlaying();
+                }
             }
 
+        }
+    }
+
+    @Synchronized
+    public void play() {
+        switch (state) {
+            case PAUSED -> {
+                state = ExecutionState.PLAYING;
+//                timeline.play();
+                propertyChangeSupport.firePropertyChange(CLOCK_STATE_CHANGED, ExecutionState.PAUSED, state);
+            }
+            case PLAYING -> {
+                // nothing to do
+            }
+            default ->
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    @Synchronized
+    public void pause() {
+        switch (state) {
+            case PAUSED -> {
+                // nothing to do
+            }
+            case PLAYING -> {
+                state = ExecutionState.PAUSED;
+                propertyChangeSupport.firePropertyChange(CLOCK_STATE_CHANGED, ExecutionState.PLAYING, state);
+            }
+            default ->
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public ExecutionState getExecutionState() {
+        return state;
+    }
+
+    private void performInPause() {
+        try {
+            Thread.sleep(asleepTime * 10);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CalculationRunner.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void performPlaying() {
+//        System.err.println("Playing");
+        propertyChangeSupport.firePropertyChange(CLOCK_TIME_CHANGED, this, null); // TODO
+        try {
+            Thread.sleep(asleepTime);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CalculationRunner.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -63,21 +63,21 @@ public class MainApp extends Application {
         Scene scene = new Scene(root, width, height, Color.BLACK);
         scene.getStylesheets().add("/styles/Styles.css");
         //
-        GlobalClock globalClock = new GlobalClock();
+//        GlobalClock globalClock = new GlobalClock();
         solarSystem = Examples.createOurSolarSystem();
-        solarSystem.setGlobalClock(globalClock);
+//        solarSystem.setGlobalClock(globalClock);
         //
         solarSystem2D = new SolarSystem2D();
         solarSystem2D.setSolarSystem(solarSystem);
         //
         controlLayer = new ControlLayer();
-        ExecutionController executionController = new ExecutionController(globalClock);
-
+        CalculationRunner calculationRunner = new CalculationRunner(solarSystem, 5);
+        ExecutionController executionController = new ExecutionController(calculationRunner);
+        //
         controlLayer.addController(executionController);
         //
         // mini map
         //
-
         root.getChildren().addAll(solarSystem2D.getNode(), controlLayer.getNode());
         //
         scene.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
@@ -95,8 +95,7 @@ public class MainApp extends Application {
         stage.setScene(scene);
         stage.show();
 
-        CalculationRunner calculationRunner = new CalculationRunner(solarSystem, 500);
-//        calculationRunner.start();
+        calculationRunner.start();
     }
 
     private void updateSize() {

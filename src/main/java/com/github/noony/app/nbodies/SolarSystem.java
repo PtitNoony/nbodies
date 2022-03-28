@@ -80,9 +80,17 @@ public class SolarSystem {
         propertyChangeSupport.firePropertyChange(BODY_ADDED, null, body);
     }
 
-    public void setGlobalClock(GlobalClock clock) {
+//    public void setGlobalClock(GlobalClock clock) {
+//        // TODO handle != deltaT
+//        clock.addPropertyChangeListener(event -> processNextStep());
+//    }
+    public void attachCalculationRunner(CalculationRunner calculationRunner) {
         // TODO handle != deltaT
-        clock.addPropertyChangeListener(event -> processNextStep());
+        calculationRunner.addPropertyChangeListener(event -> {
+            if (event.getPropertyName().equals(CalculationRunner.CLOCK_TIME_CHANGED)) {
+                processNextStep();
+            }
+        });
     }
 
     private void processNextStep() {
