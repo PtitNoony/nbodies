@@ -88,6 +88,10 @@ public class ApproximatedBody extends AbstractBody {
     protected void calculateNextPosition() {
         Point2D totalForce = new Point2D(0.0, 0.0);
         otherBodies.stream().map(b -> calculateForce(b)).forEachOrdered(f -> {
+            if (getName() == "Earth") {
+                System.err.println(">>  f=" + f);
+            }
+
             totalForce.add(f);
         });
         //
@@ -103,6 +107,16 @@ public class ApproximatedBody extends AbstractBody {
         double y = (aY * (deltaTSquare) / 2.0) + (currentSpeed.getY() * (deltaT)) + currentPosition.getY();
         //
         nextPosition = new Point2D(x, y);
+
+        if (getName() == "Earth") {
+            System.err.println(">>>   aX=" + aX);
+            System.err.println(">>>   aY=" + aY);
+            System.err.println(">>>   vX=" + vX);
+            System.err.println(">>>   vY=" + vY);
+            System.err.println(">>>   x=" + y);
+            System.err.println(">>>   x=" + y);
+        }
+
     }
 
     @Override
@@ -115,6 +129,9 @@ public class ApproximatedBody extends AbstractBody {
     protected void moveToNextPosition() {
         currentPosition = nextPosition;
         currentSpeed = nextSpeed;
+        if (getName() == "Earth") {
+            System.err.println("> " + getName() + " " + currentPosition.toString());
+        }
     }
 
     @Override
