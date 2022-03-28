@@ -67,57 +67,61 @@ public class Examples {
                 Color.ORANGERED);
         //
         solarSystem.addBody(sun);
-        solarSystem.addBody(mercure);
-        solarSystem.addBody(venus);
+//        solarSystem.addBody(mercure);
+//        solarSystem.addBody(venus);
         solarSystem.addBody(earth);
-        solarSystem.addBody(mars);
+//        solarSystem.addBody(mars);
         return solarSystem;
     }
 
     public static SolarSystem createOurSolarSystemAsApproximated() {
         var solarSystem = new SolarSystem("My Testing Solar System");
+        var reducedEarthMass = 100;
+        var reducedUA = 1500;
+        var speedFactor = 0.0000001;
         //
         ApproximatedBody sun = new ApproximatedBody("Sun",
-                333000 * Constants.EARTH_MASS_DOUBLE_VALUE,
+                333000 * reducedEarthMass,
                 2,
                 new Point2D(0, 0),
                 new Point2D(0, 0),
                 Color.GOLD);
         //
         ApproximatedBody mercure = new ApproximatedBody("Mercure",
-                0.055 * Constants.EARTH_MASS_DOUBLE_VALUE,
+                0.055 * reducedEarthMass,
                 0.38295,
-                new Point2D(Constants.AU_2_M_DOUBLE_VALUE * 0.4, 0),
-                new Point2D(0, 47362),
+                new Point2D(reducedUA * 0.4, 0),
+                new Point2D(0, 47362 * speedFactor),
                 Color.GOLDENROD);
         //
         ApproximatedBody venus = new ApproximatedBody("Venus",
-                0.815 * (Constants.EARTH_MASS_DOUBLE_VALUE),
+                0.815 * reducedEarthMass,
                 0.9499,
-                new Point2D(Constants.AU_2_M_DOUBLE_VALUE * 0.7, 0),
-                new Point2D(0, 35020),
+                new Point2D(reducedUA * 0.7, 0),
+                new Point2D(0, 35020 * speedFactor),
                 Color.ANTIQUEWHITE);
         //
         ApproximatedBody earth = new ApproximatedBody("Earth",
-                Constants.EARTH_MASS_DOUBLE_VALUE,
+                reducedEarthMass,
                 1,
-                new Point2D(Constants.AU_2_M_DOUBLE_VALUE*1.1, 0),
-                new Point2D(0, 29782),
+                new Point2D(reducedUA * 1.1, 0),
+                new Point2D(0, 29782 * speedFactor),
                 Color.DEEPSKYBLUE);
         //
         ApproximatedBody mars = new ApproximatedBody("Mars",
-                0.107 * Constants.EARTH_MASS_DOUBLE_VALUE,
+                0.107 * reducedEarthMass,
                 0.533,
-                new Point2D(Constants.AU_2_M_DOUBLE_VALUE * 1.5, 0),
-                new Point2D(0, 24077),
+                new Point2D(reducedUA * 1.5, 0),
+                new Point2D(0, 24077 * speedFactor),
                 Color.ORANGERED);
         //
         solarSystem.addBody(sun);
         solarSystem.addBody(mercure);
         solarSystem.addBody(venus);
         solarSystem.addBody(earth);
-        solarSystem.addBody(mars);
+//        solarSystem.addBody(mars);
         return solarSystem;
     }
+
 
 }
