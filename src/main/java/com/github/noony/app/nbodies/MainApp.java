@@ -63,9 +63,8 @@ public class MainApp extends Application {
         Scene scene = new Scene(root, width, height, Color.BLACK);
         scene.getStylesheets().add("/styles/Styles.css");
         //
-//        GlobalClock globalClock = new GlobalClock();
+//        solarSystem = Examples.createOurSolarSystemAsApproximated();
         solarSystem = Examples.createOurSolarSystemAsPrecise();
-//        solarSystem.setGlobalClock(globalClock);
         //
         solarSystem2D = new SolarSystem2D();
         solarSystem2D.setSolarSystem(solarSystem);

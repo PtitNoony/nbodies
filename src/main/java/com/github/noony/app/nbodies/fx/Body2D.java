@@ -40,8 +40,11 @@ public class Body2D {
     private final Circle[] pastPositions;
     private int indexPastP = 0;
 
+    private double scale;
+
     // to move out
     public Body2D(AbstractBody aBody) {
+        scale = 1.0;
         body = aBody;
         mainNode = new Group();
         pastPositions = new Circle[NB_PAST_POSITIONS];
@@ -60,19 +63,24 @@ public class Body2D {
         updatePosition();
     }
 
-    public Node getNode() {
+    public void update() {
+        updatePosition();
+    }
+
+    protected Node getNode() {
         return mainNode;
     }
 
-    public void update() {
+    protected void updateScale(double newScale) {
+        scale = newScale;
         updatePosition();
     }
 
     private void updatePosition() {
         // TODO to sort out because of threading
         var position = body.getDisplayablePosition();
-        var x = position.getX();
-        var y = position.getY();
+        var x = position.getX() * scale;
+        var y = position.getY() * scale;
         c.setCenterX(x);
         c.setCenterY(y);
         if (indexPastP == NB_PAST_POSITIONS - 2) {

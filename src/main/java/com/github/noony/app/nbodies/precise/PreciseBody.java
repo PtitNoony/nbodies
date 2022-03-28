@@ -73,8 +73,10 @@ public class PreciseBody extends AbstractBody {
     @Override
     public Point3D getDisplayablePosition() {
 
-        var x = currentPosition.getX().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
-        var y = currentPosition.getY().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
+//        var x = currentPosition.getX().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
+//        var y = currentPosition.getY().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
+        var x = currentPosition.getX().doubleValue();
+        var y = currentPosition.getY().doubleValue();
         return new Point3D(x, y, 0);
     }
 

@@ -34,6 +34,8 @@ import javafx.scene.shape.Line;
  */
 public class SolarSystem2D {
 
+    private static final double VIEWING_RATIO = 1.1;
+
     private final Group mainNode;
     private final Group systemGroup;
     //
@@ -49,7 +51,7 @@ public class SolarSystem2D {
     private double centerY = height / 2.0;
 
     private SolarSystem solarSystem = null;
-    // scale factor
+    private double scaleFactor = 1.0 / 1000.0;
 
     public SolarSystem2D() {
         mainNode = new Group();
@@ -100,6 +102,9 @@ public class SolarSystem2D {
         }
         bodies.clear();
         solarSystem = aSolarSystem;
+
+        scaleFactor = height / (VIEWING_RATIO * solarSystem.getCurrentMaxDistanceAsDouble());
+
         solarSystem.getBodies().forEach(this::createBody2D);
         solarSystem.addPropertyChangeListener(this::handleSolarSystemChange);
     }
@@ -117,6 +122,7 @@ public class SolarSystem2D {
 
     private void createBody2D(AbstractBody body) {
         Body2D body2D = new Body2D(body);
+        body2D.updateScale(scaleFactor);
         bodies.add(body2D);
         runLater(() -> systemGroup.getChildren().add(body2D.getNode()));
     }

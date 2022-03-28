@@ -80,10 +80,16 @@ public class SolarSystem {
         propertyChangeSupport.firePropertyChange(BODY_ADDED, null, body);
     }
 
-//    public void setGlobalClock(GlobalClock clock) {
-//        // TODO handle != deltaT
-//        clock.addPropertyChangeListener(event -> processNextStep());
-//    }
+    public double getCurrentMaxDistanceAsDouble() {
+        double maxDistance = 0.0;
+        for (AbstractBody body : bodies) {
+            // doing the sum on purpose to artificially create margins (experimental)
+            var p = body.getDisplayablePosition();
+            var d = p.getX() + p.getY() + p.getZ();
+            maxDistance = Math.max(maxDistance, d);
+        }
+        return maxDistance;
+    }
     public void attachCalculationRunner(CalculationRunner calculationRunner) {
         // TODO handle != deltaT
         calculationRunner.addPropertyChangeListener(event -> {
