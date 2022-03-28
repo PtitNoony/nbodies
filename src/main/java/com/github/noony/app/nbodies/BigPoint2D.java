@@ -69,4 +69,10 @@ public class BigPoint2D {
         }
         return new BigPoint2D(x.divide(norm, 4, RoundingMode.DOWN), y.divide(norm, 4, RoundingMode.DOWN));
     }
+
+    @Override
+    public String toString() {
+        return "(" + x.toString() + ", " + y.toString() + "]";
+    }
+
 }
