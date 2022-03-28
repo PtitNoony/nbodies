@@ -16,10 +16,7 @@
  */
 package com.github.noony.app.nbodies.fx;
 
-import com.github.noony.app.nbodies.Body;
-import com.github.noony.app.nbodies.Constants;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import com.github.noony.app.nbodies.AbstractBody;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -34,7 +31,7 @@ public class Body2D {
 
     private static final int NB_PAST_POSITIONS = 100000;
 
-    private final Body body;
+    private final AbstractBody body;
 
     private final Group mainNode;
     private final Circle c;
@@ -44,14 +41,14 @@ public class Body2D {
     private int indexPastP = 0;
 
     // to move out
-    public Body2D(Body body) {
-        this.body = body;
+    public Body2D(AbstractBody aBody) {
+        body = aBody;
         mainNode = new Group();
         pastPositions = new Circle[NB_PAST_POSITIONS];
         for (int i = 0; i < NB_PAST_POSITIONS; i++) {
-            pastPositions[i] = new Circle(1, this.body.getColor());
+            pastPositions[i] = new Circle(1, body.getColor());
         }
-        c = new Circle(this.body.getRadius() * 10, this.body.getColor());
+        c = new Circle(body.getRadiusAsDouble() * 10, body.getColor());
         //
         speedV = new Line();
         speedV.setStroke(Color.LIGHTGRAY);
@@ -72,8 +69,10 @@ public class Body2D {
     }
 
     private void updatePosition() {
-        var x = body.getCurrentPosition().getX().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, 150, RoundingMode.HALF_UP).doubleValue();
-        var y = body.getCurrentPosition().getY().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, 150, RoundingMode.HALF_UP).doubleValue();
+        // TODO to sort out because of threading
+        var position = body.getDisplayablePosition();
+        var x = position.getX();
+        var y = position.getY();
         c.setCenterX(x);
         c.setCenterY(y);
         if (indexPastP == NB_PAST_POSITIONS - 2) {

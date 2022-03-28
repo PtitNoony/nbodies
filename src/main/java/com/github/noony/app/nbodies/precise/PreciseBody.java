@@ -14,31 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.noony.app.nbodies;
+package com.github.noony.app.nbodies.precise;
 
+import com.github.noony.app.nbodies.AbstractBody;
+import com.github.noony.app.nbodies.BigPoint2D;
+import com.github.noony.app.nbodies.Constants;
+import com.github.noony.app.nbodies.SolarSystem;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 
 /**
  *
  * @author ahamon
  */
-public class Body {
+public class PreciseBody extends AbstractBody {
 
     public static final double DEFAULT_TIME_STEP = SolarSystem.DEFAULT_TIME_INCREMENT;
 
     private static final int SCALE = 15;
 
-    private final List<Body> otherBodies;
+    private final List<PreciseBody> otherBodies;
 
-    private final String name;
     private final BigDecimal mass;
     private final BigDecimal radius;
     //
-    private final Color color;
     //
     private BigPoint2D currentPosition;
     private BigPoint2D currentSpeed;
@@ -49,14 +52,13 @@ public class Body {
     private BigDecimal deltaT;
     private BigDecimal deltaTSquare;
 
-    public Body(String aName, BigDecimal aMass, BigDecimal aRadius, BigPoint2D initialPosition, BigPoint2D initialSpeed, Color aColor) {
+    public PreciseBody(String aName, BigDecimal aMass, BigDecimal aRadius, BigPoint2D initialPosition, BigPoint2D initialSpeed, Color aColor) {
+        super(aName, aColor);
         deltaT = BigDecimal.valueOf(DEFAULT_TIME_STEP);
         deltaTSquare = deltaT.pow(2);
         otherBodies = new LinkedList<>();
-        name = aName;
         mass = aMass;
         radius = aRadius;
-        color = aColor;
         currentPosition = initialPosition;
         currentSpeed = initialSpeed;
         //
@@ -68,11 +70,16 @@ public class Body {
         return currentPosition;
     }
 
-    public Color getColor() {
-        return color;
+    @Override
+    public Point3D getDisplayablePosition() {
+
+        var x = currentPosition.getX().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
+        var y = currentPosition.getY().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
+        return new Point3D(x, y, 0);
     }
 
-    public double getRadius() {
+    @Override
+    public double getRadiusAsDouble() {
         return radius.doubleValue();
     }
 
@@ -80,10 +87,8 @@ public class Body {
         return currentSpeed;
     }
 
-    public String getName() {
-        return name;
-    }
 
+    @Override
     protected void calculateNextPosition() {
         BigPoint2D totalForce = new BigPoint2D();
         otherBodies.stream().map(b -> calculateForce(b)).forEachOrdered(f -> {
@@ -104,23 +109,30 @@ public class Body {
         nextPosition = new BigPoint2D(x, y);
     }
 
+    @Override
     protected void setDeltaT(double aDeltaT) {
         deltaT = BigDecimal.valueOf(aDeltaT);
         deltaTSquare = deltaT.pow(2);
     }
 
+    @Override
     protected void moveToNextPosition() {
         currentPosition = nextPosition;
         currentSpeed = nextSpeed;
     }
 
-    protected void addOtherBody(Body body) {
-        if (body != this) {
-            otherBodies.add(body);
+    @Override
+    protected void linkToOtherBody(AbstractBody anotherBody) {
+        if (anotherBody != this && anotherBody != null) {
+            if (anotherBody instanceof PreciseBody body) {
+                otherBodies.add(body);
+            } else {
+                throw new UnsupportedOperationException("Cannot add " + anotherBody + " in " + this);
+            }
         }
     }
 
-    private BigPoint2D calculateForce(Body b) {
+    private BigPoint2D calculateForce(PreciseBody b) {
         BigDecimal distance = currentPosition.distance(b.getCurrentPosition());
         BigPoint2D nDirection = new BigPoint2D(
                 b.currentPosition.getX().subtract(currentPosition.getX()),
@@ -131,9 +143,5 @@ public class Body {
         return force;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 
 }

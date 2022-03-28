@@ -16,7 +16,7 @@
  */
 package com.github.noony.app.nbodies.fx;
 
-import com.github.noony.app.nbodies.Body;
+import com.github.noony.app.nbodies.AbstractBody;
 import com.github.noony.app.nbodies.MainApp;
 import com.github.noony.app.nbodies.SolarSystem;
 import java.beans.PropertyChangeEvent;
@@ -107,7 +107,7 @@ public class SolarSystem2D {
     private void handleSolarSystemChange(PropertyChangeEvent event) {
         switch (event.getPropertyName()) {
             case SolarSystem.BODY_ADDED ->
-                createBody2D((Body) event.getNewValue());
+                createBody2D((AbstractBody) event.getNewValue());
             case SolarSystem.TIME_CHANGED ->
                 updateBodiesPosition();
             default ->
@@ -115,7 +115,7 @@ public class SolarSystem2D {
         }
     }
 
-    private void createBody2D(Body body) {
+    private void createBody2D(AbstractBody body) {
         Body2D body2D = new Body2D(body);
         bodies.add(body2D);
         runLater(() -> systemGroup.getChildren().add(body2D.getNode()));

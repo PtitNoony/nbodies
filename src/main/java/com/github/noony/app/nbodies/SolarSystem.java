@@ -33,7 +33,7 @@ public class SolarSystem {
     public static final String BODY_ADDED = "bodyAdded";
     public static final String TIME_CHANGED = "timeChanged";
 
-    private final List<Body> bodies;
+    private final List<AbstractBody> bodies;
     private final String name;
     private final PropertyChangeSupport propertyChangeSupport;
 
@@ -62,7 +62,7 @@ public class SolarSystem {
         return name;
     }
 
-    public List<Body> getBodies() {
+    public List<AbstractBody> getBodies() {
         return Collections.unmodifiableList(bodies);
     }
 
@@ -70,10 +70,10 @@ public class SolarSystem {
         return timeIncrement;
     }
 
-    public void addBody(Body body) {
+    public void addBody(AbstractBody body) {
         bodies.forEach(b -> {
-            b.addOtherBody(body);
-            body.addOtherBody(b);
+            b.linkToOtherBody(body);
+            body.linkToOtherBody(b);
         });
         bodies.add(body);
         body.setDeltaT(timeIncrement);
@@ -95,8 +95,8 @@ public class SolarSystem {
 
     private void processNextStep() {
         // parallel stream?
-        bodies.forEach(body -> body.calculateNextPosition());// 86400
-        bodies.forEach(Body::moveToNextPosition);
+        bodies.forEach(AbstractBody::calculateNextPosition);// 86400
+        bodies.forEach(AbstractBody::moveToNextPosition);
         propertyChangeSupport.firePropertyChange(TIME_CHANGED, null, null);
     }
 

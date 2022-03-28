@@ -64,7 +64,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add("/styles/Styles.css");
         //
 //        GlobalClock globalClock = new GlobalClock();
-        solarSystem = Examples.createOurSolarSystem();
+        solarSystem = Examples.createOurSolarSystemAsPrecise();
 //        solarSystem.setGlobalClock(globalClock);
         //
         solarSystem2D = new SolarSystem2D();

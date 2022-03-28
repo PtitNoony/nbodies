@@ -30,6 +30,12 @@ public class Constants {
 
     public static final BigDecimal GRAVITY = BigDecimal.valueOf(6.673e-11);
 
+    public static final double AU_2_M_DOUBLE_VALUE = AU_2_M.doubleValue();
+
+    public static final double EARTH_MASS_DOUBLE_VALUE = EARTH_MASS.doubleValue();
+
+    public static final double GRAVITY_DOUBLE_VALUE = GRAVITY.doubleValue();
+
     private Constants() {
         // private utility constructor
     }

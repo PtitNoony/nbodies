@@ -16,7 +16,10 @@
  */
 package com.github.noony.app.nbodies;
 
+import com.github.noony.app.nbodies.approximated.ApproximatedBody;
+import com.github.noony.app.nbodies.precise.PreciseBody;
 import java.math.BigDecimal;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
 /**
@@ -25,42 +28,88 @@ import javafx.scene.paint.Color;
  */
 public class Examples {
 
-    public static SolarSystem createOurSolarSystem() {
+    public static SolarSystem createOurSolarSystemAsPrecise() {
         var solarSystem = new SolarSystem("My Testing Solar System");
         //
-        Body sun = new Body("Sun",
+        PreciseBody sun = new PreciseBody("Sun",
                 BigDecimal.valueOf(333000).multiply(Constants.EARTH_MASS),
                 BigDecimal.valueOf(2),
                 new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0)), BigDecimal.ZERO),
                 new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(0)),
                 Color.GOLD);
         //
-        Body mercure = new Body("Mercure",
+        PreciseBody mercure = new PreciseBody("Mercure",
                 BigDecimal.valueOf(0.055).multiply(Constants.EARTH_MASS),
                 BigDecimal.valueOf(0.38295),
                 new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0.4)), BigDecimal.ZERO),
                 new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(47362)),
                 Color.GOLDENROD);
         //
-        Body venus = new Body("Venus",
+        PreciseBody venus = new PreciseBody("Venus",
                 BigDecimal.valueOf(0.815).multiply(Constants.EARTH_MASS),
                 BigDecimal.valueOf(0.9499),
                 new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0.7)), BigDecimal.ZERO),
                 new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(35020)),
                 Color.ANTIQUEWHITE);
         //
-        Body earth = new Body("Earth",
+        PreciseBody earth = new PreciseBody("Earth",
                 BigDecimal.valueOf(1).multiply(Constants.EARTH_MASS),
                 BigDecimal.valueOf(1),
                 new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(1.1)), BigDecimal.ZERO),
                 new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(29782)),
                 Color.DEEPSKYBLUE);
         //
-        Body mars = new Body("Mars",
+        PreciseBody mars = new PreciseBody("Mars",
                 BigDecimal.valueOf(0.107).multiply(Constants.EARTH_MASS),
                 BigDecimal.valueOf(0.533),
                 new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(1.5)), BigDecimal.ZERO),
                 new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(24077)),
+                Color.ORANGERED);
+        //
+        solarSystem.addBody(sun);
+        solarSystem.addBody(mercure);
+        solarSystem.addBody(venus);
+        solarSystem.addBody(earth);
+        solarSystem.addBody(mars);
+        return solarSystem;
+    }
+
+    public static SolarSystem createOurSolarSystemAsApproximated() {
+        var solarSystem = new SolarSystem("My Testing Solar System");
+        //
+        ApproximatedBody sun = new ApproximatedBody("Sun",
+                333000 * Constants.EARTH_MASS_DOUBLE_VALUE,
+                2,
+                new Point2D(0, 0),
+                new Point2D(0, 0),
+                Color.GOLD);
+        //
+        ApproximatedBody mercure = new ApproximatedBody("Mercure",
+                0.055 * Constants.EARTH_MASS_DOUBLE_VALUE,
+                0.38295,
+                new Point2D(Constants.AU_2_M_DOUBLE_VALUE * 0.4, 0),
+                new Point2D(0, 47362),
+                Color.GOLDENROD);
+        //
+        ApproximatedBody venus = new ApproximatedBody("Venus",
+                0.815 * (Constants.EARTH_MASS_DOUBLE_VALUE),
+                0.9499,
+                new Point2D(Constants.AU_2_M_DOUBLE_VALUE * 0.7, 0),
+                new Point2D(0, 35020),
+                Color.ANTIQUEWHITE);
+        //
+        ApproximatedBody earth = new ApproximatedBody("Earth",
+                Constants.EARTH_MASS_DOUBLE_VALUE,
+                1,
+                new Point2D(Constants.AU_2_M_DOUBLE_VALUE*1.1, 0),
+                new Point2D(0, 29782),
+                Color.DEEPSKYBLUE);
+        //
+        ApproximatedBody mars = new ApproximatedBody("Mars",
+                0.107 * Constants.EARTH_MASS_DOUBLE_VALUE,
+                0.533,
+                new Point2D(Constants.AU_2_M_DOUBLE_VALUE * 1.5, 0),
+                new Point2D(0, 24077),
                 Color.ORANGERED);
         //
         solarSystem.addBody(sun);
