@@ -19,8 +19,11 @@ package com.github.noony.app.nbodies;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import javafx.geometry.Point3D;
 
 /**
  *
@@ -103,7 +106,9 @@ public class SolarSystem {
         // parallel stream?
         bodies.forEach(AbstractBody::calculateNextPosition);// 86400
         bodies.forEach(AbstractBody::moveToNextPosition);
-        propertyChangeSupport.firePropertyChange(TIME_CHANGED, null, null);
+        Map<AbstractBody, Point3D> positions = new HashMap<>();
+        bodies.forEach(body -> positions.put(body, body.getDisplayablePosition()));
+        propertyChangeSupport.firePropertyChange(TIME_CHANGED, null, positions);
     }
 
 }

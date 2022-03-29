@@ -17,6 +17,7 @@
 package com.github.noony.app.nbodies.fx;
 
 import com.github.noony.app.nbodies.AbstractBody;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -41,11 +42,13 @@ public class Body2D {
     private int indexPastP = 0;
 
     private double scale;
+    private Point3D position;
 
     // to move out
     public Body2D(AbstractBody aBody) {
         scale = 1.0;
         body = aBody;
+        position = aBody.getDisplayablePosition();
         mainNode = new Group();
         pastPositions = new Circle[NB_PAST_POSITIONS];
         for (int i = 0; i < NB_PAST_POSITIONS; i++) {
@@ -63,13 +66,19 @@ public class Body2D {
         updatePosition();
     }
 
-    public void update() {
+    public void update(Point3D newPosition) {
+        position = newPosition;
         updatePosition();
     }
 
     protected Node getNode() {
         return mainNode;
     }
+
+    public AbstractBody getBody() {
+        return body;
+    }
+
 
     protected void updateScale(double newScale) {
         scale = newScale;
@@ -78,7 +87,7 @@ public class Body2D {
 
     private void updatePosition() {
         // TODO to sort out because of threading
-        var position = body.getDisplayablePosition();
+//        var position = body.getDisplayablePosition();
         var x = position.getX() * scale;
         var y = position.getY() * scale;
         c.setCenterX(x);

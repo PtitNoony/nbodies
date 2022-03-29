@@ -22,7 +22,9 @@ import com.github.noony.app.nbodies.SolarSystem;
 import java.beans.PropertyChangeEvent;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import static javafx.application.Platform.runLater;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -34,7 +36,8 @@ import javafx.scene.shape.Line;
  */
 public class SolarSystem2D {
 
-    private static final double VIEWING_RATIO = 1.1;
+    private static final double VIEWING_RATIO = 1.5;
+    private static final double DEFAULT_SCALE_FACTOR = 1.0 / 1000.0;
 
     private final Group mainNode;
     private final Group systemGroup;
@@ -51,7 +54,9 @@ public class SolarSystem2D {
     private double centerY = height / 2.0;
 
     private SolarSystem solarSystem = null;
-    private double scaleFactor = 1.0 / 1000.0;
+    private double scaleFactor = DEFAULT_SCALE_FACTOR;
+
+    private int updateCount = 0;
 
     public SolarSystem2D() {
         mainNode = new Group();
@@ -94,6 +99,7 @@ public class SolarSystem2D {
         //
         systemGroup.setTranslateX(centerX);
         systemGroup.setTranslateY(centerY);
+        updateScaleFactor();
     }
 
     public void setSolarSystem(SolarSystem aSolarSystem) {
@@ -103,7 +109,7 @@ public class SolarSystem2D {
         bodies.clear();
         solarSystem = aSolarSystem;
 
-        scaleFactor = height / (VIEWING_RATIO * solarSystem.getCurrentMaxDistanceAsDouble());
+        updateScaleFactor();
 
         solarSystem.getBodies().forEach(this::createBody2D);
         solarSystem.addPropertyChangeListener(this::handleSolarSystemChange);
@@ -114,10 +120,19 @@ public class SolarSystem2D {
             case SolarSystem.BODY_ADDED ->
                 createBody2D((AbstractBody) event.getNewValue());
             case SolarSystem.TIME_CHANGED ->
-                updateBodiesPosition();
+                updateBodiesPosition((Map<AbstractBody, Point3D>) event.getNewValue());
             default ->
                 throw new UnsupportedOperationException(event.getPropertyName());
         }
+    }
+
+    private void updateScaleFactor() {
+        if (solarSystem != null) {
+            scaleFactor = height / (VIEWING_RATIO * solarSystem.getCurrentMaxDistanceAsDouble());
+        } else {
+            scaleFactor = DEFAULT_SCALE_FACTOR;
+        }
+        runLater(() -> bodies.forEach(b -> b.updateScale(scaleFactor)));
     }
 
     private void createBody2D(AbstractBody body) {
@@ -127,8 +142,14 @@ public class SolarSystem2D {
         runLater(() -> systemGroup.getChildren().add(body2D.getNode()));
     }
 
-    private void updateBodiesPosition() {
-        runLater(() -> bodies.forEach(Body2D::update));
+    private void updateBodiesPosition(Map<AbstractBody, Point3D> newPositions) {
+        if (updateCount == 50) {
+            updateCount = 0;
+            System.err.println("update");
+            runLater(() -> bodies.forEach(b2D -> b2D.update(newPositions.get(b2D.getBody()))));
+        } else {
+            updateCount++;
+        }
     }
 
 }
