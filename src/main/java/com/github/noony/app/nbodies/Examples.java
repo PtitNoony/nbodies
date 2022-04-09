@@ -38,6 +38,13 @@ public class Examples {
                 new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(0)),
                 Color.GOLD);
         //
+        PreciseBody sun2 = new PreciseBody("Sun",
+                BigDecimal.valueOf(333000).multiply(Constants.EARTH_MASS),
+                BigDecimal.valueOf(2),
+                new BigPoint2D(Constants.AU_2_M.multiply(BigDecimal.valueOf(0.8)), Constants.AU_2_M.multiply(BigDecimal.valueOf(0.8))),
+                new BigPoint2D(BigDecimal.ZERO, BigDecimal.valueOf(0)),
+                Color.GOLD);
+        //
         PreciseBody mercure = new PreciseBody("Mercure",
                 BigDecimal.valueOf(0.055).multiply(Constants.EARTH_MASS),
                 BigDecimal.valueOf(0.38295),
@@ -67,10 +74,11 @@ public class Examples {
                 Color.ORANGERED);
         //
         solarSystem.addBody(sun);
-//        solarSystem.addBody(mercure);
-//        solarSystem.addBody(venus);
+//        solarSystem.addBody(sun2);
+        solarSystem.addBody(mercure);
+        solarSystem.addBody(venus);
         solarSystem.addBody(earth);
-//        solarSystem.addBody(mars);
+        solarSystem.addBody(mars);
         return solarSystem;
     }
 
@@ -119,7 +127,7 @@ public class Examples {
         solarSystem.addBody(mercure);
         solarSystem.addBody(venus);
         solarSystem.addBody(earth);
-//        solarSystem.addBody(mars);
+        solarSystem.addBody(mars);
         return solarSystem;
     }
 
