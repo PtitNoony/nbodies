@@ -80,17 +80,8 @@ public class PreciseBody extends AbstractBody {
 
     @Override
     public Point3D getDisplayablePosition() {
-
-//        var x = currentPosition.getX().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
-//        var y = currentPosition.getY().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
         var x = currentPosition.getX().doubleValue();
         var y = currentPosition.getY().doubleValue();
-//        if (getName() == "Sun") {
-//            System.err.println(" =================== ");
-//            System.err.println(" Sun ::   x=" + x + "  y=" + y);
-//            System.err.println(" > " + currentPosition);
-//            System.err.println(" =================== ");
-//        }
         return new Point3D(x, y, 0);
     }
 
@@ -123,16 +114,6 @@ public class PreciseBody extends AbstractBody {
         BigDecimal y = ((aY.multiply(deltaTSquare).multiply(BigDecimal.valueOf(0.5))).add(currentSpeed.getY().multiply(deltaT))).add(currentPosition.getY());
         //
         nextPosition = new BigPoint2D(x, y);
-
-        if (getName() == "Sun") {
-            System.err.println(" =================== ");
-            System.err.println(" Sun ::   aX=" + aX + "  aY=" + aY);
-            System.err.println(" Sun ::   vX=" + vX + "  vY=" + vY);
-            System.err.println(" Sun ::    x=" + x + "   y=" + y);
-            System.err.println(" > " + nextPosition);
-            System.err.println(" =================== ");
-        }
-
     }
 
     @Override
@@ -164,14 +145,8 @@ public class PreciseBody extends AbstractBody {
                 b.currentPosition.getX().subtract(currentPosition.getX()),
                 b.currentPosition.getY().subtract(currentPosition.getY()))
                 .normalize();
-//        if (getName() == "Sun") {
-//            System.err.println(" G=" + gCste.toString());
-//        }
         BigDecimal fNorm = gCste.multiply(mass).multiply(b.mass).divide(distance.pow(2), SCALE, RoundingMode.HALF_UP);
         BigPoint2D force = new BigPoint2D(fNorm.multiply(nDirection.getX()), fNorm.multiply(nDirection.getY()));
-//        if (getName() == "Sun") {
-//            System.err.println(" G=" + gCste.toString());
-//        }
         return force;
     }
 
