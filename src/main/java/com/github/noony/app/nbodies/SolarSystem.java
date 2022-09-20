@@ -18,6 +18,7 @@ package com.github.noony.app.nbodies;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,18 +40,20 @@ public class SolarSystem {
     private final List<AbstractBody> bodies;
     private final String name;
     private final PropertyChangeSupport propertyChangeSupport;
+    private final BigDecimal gravitationalConstant;
 
     private final int timeIncrement;
 
-    public SolarSystem(String aName, int aTimeIncrement) {
+    public SolarSystem(String aName, BigDecimal gravitationalCste, int aTimeIncrement) {
         name = aName;
         bodies = new LinkedList<>();
         timeIncrement = aTimeIncrement;
         propertyChangeSupport = new PropertyChangeSupport(SolarSystem.this);
+        gravitationalConstant = gravitationalCste;
     }
 
     public SolarSystem(String aName) {
-        this(aName, DEFAULT_TIME_INCREMENT);
+        this(aName, Constants.EARTH_MASS, DEFAULT_TIME_INCREMENT);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -93,6 +96,7 @@ public class SolarSystem {
         }
         return maxDistance;
     }
+
     public void attachCalculationRunner(CalculationRunner calculationRunner) {
         // TODO handle != deltaT
         calculationRunner.addPropertyChangeListener(event -> {

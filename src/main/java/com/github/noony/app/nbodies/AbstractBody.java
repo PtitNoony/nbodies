@@ -45,6 +45,8 @@ public abstract class AbstractBody {
 
     protected abstract void setDeltaT(double aDeltaT);
 
+    protected abstract void setGravitationalConstant(String aGCste3);
+
     public String getName() {
         return name;
     }
