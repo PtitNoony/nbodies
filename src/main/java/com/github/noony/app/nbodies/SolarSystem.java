@@ -39,21 +39,21 @@ public class SolarSystem {
 
     private final List<AbstractBody> bodies;
     private final String name;
-    private final PropertyChangeSupport propertyChangeSupport;
     private final BigDecimal gravitationalConstant;
+    private final PropertyChangeSupport propertyChangeSupport;
 
     private final int timeIncrement;
 
-    public SolarSystem(String aName, BigDecimal gravitationalCste, int aTimeIncrement) {
+    public SolarSystem(String aName, BigDecimal aGravitationalConstant, int aTimeIncrement) {
         name = aName;
+        gravitationalConstant = aGravitationalConstant;
         bodies = new LinkedList<>();
         timeIncrement = aTimeIncrement;
         propertyChangeSupport = new PropertyChangeSupport(SolarSystem.this);
-        gravitationalConstant = gravitationalCste;
     }
 
     public SolarSystem(String aName) {
-        this(aName, Constants.EARTH_MASS, DEFAULT_TIME_INCREMENT);
+        this(aName, Constants.GRAVITY, DEFAULT_TIME_INCREMENT);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -79,6 +79,7 @@ public class SolarSystem {
     public void addBody(AbstractBody body) {
         bodies.forEach(b -> {
             b.linkToOtherBody(body);
+            b.setGConstant(gravitationalConstant);
             body.linkToOtherBody(b);
         });
         bodies.add(body);

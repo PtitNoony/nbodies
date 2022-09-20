@@ -16,6 +16,7 @@
  */
 package com.github.noony.app.nbodies;
 
+import java.math.BigDecimal;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 
@@ -45,7 +46,7 @@ public abstract class AbstractBody {
 
     protected abstract void setDeltaT(double aDeltaT);
 
-    protected abstract void setGravitationalConstant(String aGCste3);
+    protected abstract void setGConstant(BigDecimal aGcst);
 
     public String getName() {
         return name;

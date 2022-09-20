@@ -19,6 +19,7 @@ package com.github.noony.app.nbodies.approximated;
 import com.github.noony.app.nbodies.AbstractBody;
 import com.github.noony.app.nbodies.Constants;
 import com.github.noony.app.nbodies.SolarSystem;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.geometry.Point2D;
@@ -48,6 +49,8 @@ public class ApproximatedBody extends AbstractBody {
     //
     private double deltaT;
     private double deltaTSquare;
+    //
+    private double gCste;
 
     public ApproximatedBody(String aName, double aMass, double aRadius, Point2D initialPosition, Point2D initialSpeed, Color aColor) {
         super(aName, aColor);
@@ -61,6 +64,12 @@ public class ApproximatedBody extends AbstractBody {
         //
         nextPosition = currentPosition;
         nextSpeed = currentSpeed;
+        gCste = Constants.GRAVITY_DOUBLE_VALUE;
+    }
+
+    @Override
+    protected void setGConstant(BigDecimal aGcst) {
+        gCste = aGcst.doubleValue();
     }
 
     public Point2D getCurrentPosition() {
@@ -151,7 +160,7 @@ public class ApproximatedBody extends AbstractBody {
                 b.currentPosition.getX() - currentPosition.getX(),
                 b.currentPosition.getY() - currentPosition.getY())
                 .normalize();
-        double fNorm = Constants.GRAVITY_DOUBLE_VALUE * mass * b.mass / (distance * distance);
+        double fNorm = gCste * mass * b.mass / (distance * distance);
         Point2D force = new Point2D(fNorm * nDirection.getX(), fNorm * nDirection.getY());
         return force;
     }

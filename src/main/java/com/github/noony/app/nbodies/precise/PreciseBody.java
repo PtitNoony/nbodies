@@ -35,7 +35,7 @@ public class PreciseBody extends AbstractBody {
 
     public static final double DEFAULT_TIME_STEP = SolarSystem.DEFAULT_TIME_INCREMENT;
 
-    private static final int SCALE = 15;
+    private static final int SCALE = 25;
 
     private final List<PreciseBody> otherBodies;
 
@@ -51,6 +51,8 @@ public class PreciseBody extends AbstractBody {
     //
     private BigDecimal deltaT;
     private BigDecimal deltaTSquare;
+    //
+    private BigDecimal gCste;
 
     public PreciseBody(String aName, BigDecimal aMass, BigDecimal aRadius, BigPoint2D initialPosition, BigPoint2D initialSpeed, Color aColor) {
         super(aName, aColor);
@@ -64,6 +66,12 @@ public class PreciseBody extends AbstractBody {
         //
         nextPosition = currentPosition;
         nextSpeed = currentSpeed;
+        gCste = Constants.GRAVITY;
+    }
+
+    @Override
+    protected void setGConstant(BigDecimal aGcst) {
+        gCste = aGcst;
     }
 
     public BigPoint2D getCurrentPosition() {
@@ -72,9 +80,6 @@ public class PreciseBody extends AbstractBody {
 
     @Override
     public Point3D getDisplayablePosition() {
-
-//        var x = currentPosition.getX().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
-//        var y = currentPosition.getY().multiply(BigDecimal.valueOf(200)).divide(Constants.AU_2_M, SCALE, RoundingMode.HALF_UP).doubleValue();
         var x = currentPosition.getX().doubleValue();
         var y = currentPosition.getY().doubleValue();
         return new Point3D(x, y, 0);
@@ -140,7 +145,7 @@ public class PreciseBody extends AbstractBody {
                 b.currentPosition.getX().subtract(currentPosition.getX()),
                 b.currentPosition.getY().subtract(currentPosition.getY()))
                 .normalize();
-        BigDecimal fNorm = Constants.GRAVITY.multiply(mass).multiply(b.mass).divide(distance.pow(2), SCALE, RoundingMode.HALF_UP);
+        BigDecimal fNorm = gCste.multiply(mass).multiply(b.mass).divide(distance.pow(2), SCALE, RoundingMode.HALF_UP);
         BigPoint2D force = new BigPoint2D(fNorm.multiply(nDirection.getX()), fNorm.multiply(nDirection.getY()));
         return force;
     }
